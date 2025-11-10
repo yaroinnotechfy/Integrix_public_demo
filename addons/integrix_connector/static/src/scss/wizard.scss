@@ -1,0 +1,48 @@
+/* Step 3 list: ~5 рядків видимих, далі скрол */
+.o_form_view .ix-map-list .o_list_view {
+  max-height: 280px;     /* ~5 рядків */
+  overflow-y: auto;
+}
+
+/* зробимо колонку Active трохи вужчою */
+.o_form_view .ix-map-list .o_list_view table th:nth-child(1),
+.o_form_view .ix-map-list .o_list_view table td:nth-child(1) {
+  width: 8rem;           /* підлаштуй за смаком */
+  white-space: nowrap;
+}
+
+
+/* Step 0 layout: label over button */
+.ix-step0-card .o_form_label { display:block; margin: 0 0 10px 0; }
+.ix-step0-card .ix-step0-btn { min-width: 280px; }
+
+
+/* Step 0: description under headers */
+.ix-step0-desc{
+  display:block;
+  margin: 6px 0 12px;
+  color: var(--o-gray-700);
+  line-height: 1.4;
+}
+
+
+/* --- Step 0 layout fix: put description UNDER the header, full width --- */
+.ix-step0 .ix-step0-card .ix-step0-desc,
+.ix-step0 .ix-step0-card .ix-step0-btn{
+  /* span across both label/value columns of form grid */
+  grid-column: 1 / -1;
+}
+.ix-step0 .ix-step0-card .ix-step0-desc{
+  display:block;
+  margin: 6px 0 12px;
+  color: var(--o-gray-700);
+  line-height: 1.4;
+}
+
+
+
+/* Wizard Step 0: description & button under headers */
+.ix-step0 .ix-step0-card > .o_row { grid-column: 1 / -1; }
+.ix-step0 .ix-step0-card > .o_row .ix-step0-desc{ display:block; margin:6px 0 12px; color: var(--o-gray-700); line-height:1.4; }
+.ix-step0 .ix-step0-card > .ix-step0-btn{ grid-column: 1 / -1; min-width:280px; }
+

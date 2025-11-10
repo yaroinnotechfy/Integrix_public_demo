@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Window action для форми налаштувань integrix.config -->
+  <record id="action_integrix_config" model="ir.actions.act_window">
+    <field name="name">Integri-x Settings</field>
+    <field name="res_model">integrix.config</field>
+    <field name="view_mode">form</field>
+    <field name="target">current</field>
+  </record>
+</odoo>
