@@ -38,6 +38,7 @@ class IntegrixSetupWizard(models.TransientModel):
     signup_company_type = fields.Integer(string="Company type", default=1)
     signup_phone        = fields.Char(string="Phone")
     signup_email        = fields.Char(string="Email")
+    signup_password     = fields.Char(string="Password")
     signup_time_zone = fields.Selection(selection='_tz_get', string='Time zone', default=lambda self: (self.env.user.tz or 'UTC'))
     signup_company_info = fields.Char(string="Company info")
     signup_path         = fields.Char(string="Sign-up Path", default="api/Auth/external-sign-up")
@@ -72,6 +73,19 @@ class IntegrixSetupWizard(models.TransientModel):
     def default_get(self, fields_list):
         vals = super().default_get(fields_list)
         vals.setdefault('step', '0')
+        user = self.env.user.sudo()
+        full_name = (user.name or '').strip()
+        parts = full_name.split(None, 1)
+        first = parts[0] if parts else ''
+        last  = parts[1] if len(parts) > 1 else ''
+        vals.setdefault('signup_first_name', first)
+        vals.setdefault('signup_last_name',  last)
+        vals.setdefault('signup_email', (user.email or user.login or '').strip())
+        phone = (user.partner_id.mobile or user.partner_id.phone or '').strip()
+        if phone:
+            vals.setdefault('signup_phone', phone)
+        vals.setdefault('signup_company_name', (user.company_id.name or '').strip())
+        vals.setdefault('signup_time_zone', user.tz or 'UTC')
         config = self.env['integrix.config'].sudo().search([], limit=1)
         if config:
             vals.update({
@@ -158,6 +172,7 @@ class IntegrixSetupWizard(models.TransientModel):
             ('signup_company_name', _("Company name")),
             ('signup_email', _("Email")),
             ('signup_time_zone', _('Time zone')),
+                    ('signup_password', _('Password')),
         ]
         for f, label in req:
             if not (self[f] or "").strip():
@@ -174,6 +189,7 @@ class IntegrixSetupWizard(models.TransientModel):
             "email": self.signup_email,
             "timeZoneId": (self.signup_time_zone or self.signup_time_zone),
             "companyInfo": self.signup_company_info or "",
+            "password": self.signup_password,
         }
         try:
             r = requests.post(url, json=payload, timeout=60)

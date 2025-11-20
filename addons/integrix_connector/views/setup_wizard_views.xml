@@ -47,7 +47,8 @@
             <field name="signup_first_name"/>
             <field name="signup_last_name"/>
             <field name="signup_email" colspan="2"/>
-            <field name="signup_phone" colspan="2"/>
+                        <field name="signup_password" password="True" colspan="2"/>
+<field name="signup_phone" colspan="2"/>
           </group>
 
           <!-- RIGHT: COMPANY -->
