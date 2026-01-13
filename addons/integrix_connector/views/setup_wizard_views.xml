@@ -55,7 +55,7 @@
           <group string="COMPANY">
             <field name="signup_company_name"/>
             <field name="signup_time_zone" string="Time zone"/>
-            <field name="signup_company_info"/>
+            <field name="signup_company_info" invisible="1"/>
           </group>
 
         </group>
@@ -83,9 +83,13 @@
               <field name="company_id"/>
               <field name="probe_path"/>
               <field name="export_path"/>
-              <button name="action_test_connection_wizard"
-                      style="min-width: 360px; white-space: nowrap; display:inline-block;"
-                      type="object" string="Test Connection" class="oe_highlight"/>
+              <div class="ix-test-conn">
+                <button name="action_test_connection_wizard"
+                        style="min-width: 360px; white-space: nowrap; display:inline-block;"
+                        context="{'integrix_show_loader': True}"
+                        type="object" string="Test Connection" class="oe_highlight ix-test-conn-btn"/>
+                <span class="fa fa-spinner fa-spin ix-inline-loader" style="display:none;" title="Connecting..."/>
+              </div>
             </group>
             <group string="Probe Result">
               <field name="ping_status" readonly="1"/>
@@ -111,7 +115,7 @@
         <sheet>
           <group>
             <group string="SSOT"><field name="ssot"/></group>
-            <group string="Sync Direction"><field name="sync_direction"/></group>
+            
           </group>
         </sheet>
         <footer>

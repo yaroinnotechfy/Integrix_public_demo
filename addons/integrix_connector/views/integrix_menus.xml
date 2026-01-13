@@ -5,7 +5,7 @@
     <field name="name">Integri-x Sync</field>
     <field name="sequence">40</field>
     <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
-    <field name="web_icon">integrix_connector,static/description/icon.png</field>
+    <field name="web_icon">integrix_connector,static/description/icon_v2.png</field>
     <field name="action" ref="action_integrix_dashboard"/>
   </record>
 
@@ -24,7 +24,6 @@
     <field name="parent_id" ref="menu_integrix_root"/>
     <field name="sequence">2</field>
     <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
-    <field name="action" ref="action_integrix_setup_wizard"/>
   </record>
 
   <!-- Settings  -->

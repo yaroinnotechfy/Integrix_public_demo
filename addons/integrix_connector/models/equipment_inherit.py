@@ -21,7 +21,7 @@ class MaintenanceEquipment(models.Model):
 
     def _ix_get_base_url(self):
         cfg = self.env['integrix.config'].sudo().search([], limit=1)
-        return (cfg.base_url or 'https://app-winnerei-dev-1taskapp-api.azurewebsites.net/').rstrip('/')
+        return (cfg.base_url or 'https://api.integri-x.com/').rstrip('/')
 
     def _ix_url_for_equipment(self):
         self.ensure_one()

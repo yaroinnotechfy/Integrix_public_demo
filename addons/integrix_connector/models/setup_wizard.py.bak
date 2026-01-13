@@ -47,7 +47,7 @@ class IntegrixSetupWizard(models.TransientModel):
     signup_path         = fields.Char(string="Sign-up Path", default="api/Auth/external-sign-up")
 
     # --- Step 1: Connect ---
-    base_url     = fields.Char(default="https://api.integri-x.com/")
+    base_url     = fields.Char(default="https://app-winnerei-dev-1taskapp-api.azurewebsites.net/")
     api_email    = fields.Char()
     api_password = fields.Char()
     company_id   = fields.Char()
@@ -59,7 +59,7 @@ class IntegrixSetupWizard(models.TransientModel):
                              ("odoo","Odoo is source of truth")], default="odoo")
     sync_direction = fields.Selection([("ix2odoo","Integri-x → Odoo"),
                                        ("odoo2ix","Odoo → Integri-x"),
-                                       ("two_way","Two-way (advanced)")], default="odoo2ix")
+                                       ("two_way","Two-way (advanced)")], default="ix2odoo")
 
     # --- Step 3: mapping ---
     line_ids = fields.One2many("integrix.setup.wizard.line", "wizard_id", string="Field Mapping")
@@ -231,62 +231,28 @@ class IntegrixSetupWizard(models.TransientModel):
         try:
             r = requests.post(signin_url, json={"email": self.api_email, "password": self.api_password}, timeout=60)
             if r.status_code >= 400:
-                self.ping_status = "AUTH FAIL %s" % r.status_code
+                self.ping_status = f"AUTH FAIL {r.status_code}"
                 raise UserError(_("Auth failed: %s") % r.text)
             token = self._extract_token_from_response(r)
             if not token:
                 self.ping_status = "AUTH FAIL (no token)"
                 raise UserError(_("Auth response has no token"))
         except Exception as e:
-            self.ping_status = "AUTH ERROR: %s" % e
+            self.ping_status = f"AUTH ERROR: {e}"
             raise UserError(_("Auth error: %s") % e)
 
-        
-        if not self.company_id:
-            try:
-                if "." in token:
-                    import base64, json
-                    p = token.split(".",2)[1]
-                    pad = "=" * (-len(p) % 4)
-                    payload = json.loads(base64.urlsafe_b64decode(p + pad) or b"{}")
-                    cand = payload.get("companyId") or payload.get("company_id") or payload.get("tenantId") or payload.get("tenant") or payload.get("companyGuid")
-                    if cand:
-                        self.company_id = str(cand)
-            except Exception:
-                pass
-        if not self.company_id:
-            headers = {"Authorization": f"Bearer {token}"}
-            for ep in ("api/Companies","api/companies","api/Company"):
-                try:
-                    pr0 = requests.get(self._fmt_url(self.base_url, ep), headers=headers, timeout=30)
-                    if pr0.ok:
-                        try:
-                            data = pr0.json()
-                        except Exception:
-                            data = None
-                        cid = None
-                        if isinstance(data, list) and len(data) == 1 and isinstance(data[0], dict):
-                            cid = data[0].get("id") or data[0].get("companyId") or data[0].get("guid")
-                        elif isinstance(data, dict):
-                            cid = data.get("id") or data.get("companyId") or data.get("guid")
-                        if cid:
-                            self.company_id = str(cid)
-                            break
-                except Exception:
-                    pass
-
         probe_path = (self.probe_path or "").strip() or "api/companies/{companyId}/CompanyAssets"
-        if "{companyId}" in probe_path:
-            if not self.company_id:
-                probe_path = "api/Auth/Ip"
-            else:
+                if "{companyId}" in probe_path:
+            if self.company_id:
                 probe_path = probe_path.replace("{companyId}", self.company_id)
+            else:
+                probe_path = "api/Auth/Ip"
 
         probe_url = self._fmt_url(self.base_url, probe_path)
-        headers = {"Authorization": "Bearer %s" % token}
+        headers = {"Authorization": f"Bearer {token}"}
         try:
             pr = requests.get(probe_url, headers=headers, timeout=60)
-            self.ping_status = "OK" if pr.status_code == 200 else "HTTP %s" % pr.status_code
+            self.ping_status = "OK" if pr.status_code == 200 else f"HTTP {pr.status_code}"
             try:
                 meta = pr.json() if pr.text else {}
             except Exception:
@@ -297,7 +263,7 @@ class IntegrixSetupWizard(models.TransientModel):
                 meta = {}
             self.ping_tenant = meta.get("ip") or meta.get("tenant") or meta.get("companyName") or meta.get("tenantName") or self.ping_tenant
         except Exception as e:
-            self.ping_status = "FAIL: %s" % e
+            self.ping_status = f"FAIL: {e}"
             raise UserError(_("Probe error: %s") % e)
 
         try:
@@ -321,6 +287,7 @@ class IntegrixSetupWizard(models.TransientModel):
             }
         }
 
+    # ------- навігація -------
     def _view_id_for_step(self, step):
         xmlid = {
             "0":  "integrix_connector.view_integrix_setup_wizard_form_step0",
