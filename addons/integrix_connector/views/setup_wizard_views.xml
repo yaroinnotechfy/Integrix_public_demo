@@ -77,12 +77,12 @@
         <sheet>
           <group>
             <group string="Connection">
-              <field name="base_url" readonly="1"/>
+              <field name="base_url" readonly="1" invisible="1"/>
               <field name="api_email"/>
               <field name="api_password" password="True"/>
               <field name="company_id"/>
-              <field name="probe_path"/>
-              <field name="export_path"/>
+              <field name="probe_path" invisible="1"/>
+              <field name="export_path" invisible="1"/>
               <div class="ix-test-conn">
                 <button name="action_test_connection_wizard"
                         style="min-width: 360px; white-space: nowrap; display:inline-block;"
@@ -169,7 +169,7 @@
         <sheet>
           <group>
             <separator string="Initial Sync"/>
-            <field name="do_initial_sync" string="Run initial sync?"/>
+            <field name="do_initial_sync" string="Import all equipment from Odoo to IntegriX"/>
           </group>
         </sheet>
         <footer>

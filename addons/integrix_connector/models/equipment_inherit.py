@@ -29,7 +29,11 @@ class MaintenanceEquipment(models.Model):
         if not base:
             return ""
         ext = (self.x_integrix_external_id or '').strip()
-        return f"{base}/?externalId={quote(ext)}" if ext else base
+        if not ext:
+            return base
+        if ext.isdigit():
+            return f"{base}/app/dashboard?id={quote(ext)}"
+        return f"{base}/?externalId={quote(ext)}"
 
     def action_link_integrix(self):
         for rec in self:

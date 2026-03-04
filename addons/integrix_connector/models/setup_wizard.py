@@ -70,7 +70,7 @@ class IntegrixSetupWizard(models.TransientModel):
     ping_api_version = fields.Char(readonly=True)
 
     # Step 4
-    do_initial_sync = fields.Boolean(string="Run initial sync?")
+    do_initial_sync = fields.Boolean(string="Import all equipment from Odoo to IntegriX")
 
     @api.model
     def default_get(self, fields_list):
@@ -346,14 +346,14 @@ class IntegrixSetupWizard(models.TransientModel):
 
     def action_next(self):
         self.ensure_one()
-        order = ["0","0a","1","2","3","4"]
+        order = ["0","0a","1","4"]
         i = order.index(self.step or "0")
         self.step = order[min(i+1, len(order)-1)]
         return self._reopen()
 
     def action_back(self):
         self.ensure_one()
-        order = ["0","0a","1","2","3","4"]
+        order = ["0","0a","1","4"]
         i = order.index(self.step or "0")
         self.step = order[max(i-1, 0)]
         return self._reopen()
