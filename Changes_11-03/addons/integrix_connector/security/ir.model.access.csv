@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_integrix_config_admin,access.integrix.config.admin,model_integrix_config,base.group_system,1,1,1,1
+access_integrix_config_user,access.integrix.config.user,model_integrix_config,base.group_user,1,0,0,0
+
+access_integrix_dashboard_user,access.integrix.dashboard.user,model_integrix_dashboard,base.group_user,1,0,0,0
+
+access_integrix_setup_wizard_user,access.integrix.setup.wizard.user,model_integrix_setup_wizard,base.group_user,1,1,1,1
+access_integrix_setup_wizard_line_user,access.integrix.setup.wizard.line.user,model_integrix_setup_wizard_line,base.group_user,1,1,1,1
+
+access_integrix_field_map_admin,access.integrix.field.map.admin,model_integrix_field_map,base.group_system,1,1,1,1
+access_integrix_field_map_user,access.integrix.field.map.user,model_integrix_field_map,base.group_user,1,0,0,0

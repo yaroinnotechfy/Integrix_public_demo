@@ -1,0 +1,106 @@
+/* Step 3 list: ~5 рядків видимих, далі скрол */
+.o_form_view .ix-map-list .o_list_view {
+  max-height: 280px;     /* ~5 рядків */
+  overflow-y: auto;
+}
+
+/* зробимо колонку Active трохи вужчою */
+.o_form_view .ix-map-list .o_list_view table th:nth-child(1),
+.o_form_view .ix-map-list .o_list_view table td:nth-child(1) {
+  width: 8rem;           /* підлаштуй за смаком */
+  white-space: nowrap;
+}
+
+
+/* Step 0 layout: label over button */
+.ix-step0-card .o_form_label { display:block; margin: 0 0 10px 0; }
+.ix-step0-card .ix-step0-btn { min-width: 280px; }
+
+
+/* Step 0: description under headers */
+.ix-step0-desc{
+  display:block;
+  margin: 6px 0 12px;
+  color: var(--o-gray-700);
+  line-height: 1.4;
+}
+
+
+/* --- Step 0 layout fix: put description UNDER the header, full width --- */
+.ix-step0 .ix-step0-card .ix-step0-desc,
+.ix-step0 .ix-step0-card .ix-step0-btn{
+  /* span across both label/value columns of form grid */
+  grid-column: 1 / -1;
+}
+.ix-step0 .ix-step0-card .ix-step0-desc{
+  display:block;
+  margin: 6px 0 12px;
+  color: var(--o-gray-700);
+  line-height: 1.4;
+}
+
+
+
+/* Wizard Step 0: description & button under headers */
+.ix-step0 .ix-step0-card > .o_row { grid-column: 1 / -1; }
+.ix-step0 .ix-step0-card > .o_row .ix-step0-desc{ display:block; margin:6px 0 12px; color: var(--o-gray-700); line-height:1.4; }
+.ix-step0 .ix-step0-card > .ix-step0-btn{ grid-column: 1 / -1; min-width:280px; }
+
+
+.o_form_view .ix-test-conn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+
+
+.o_form_view .o_field_widget input,
+.o_form_view .o_field_widget textarea,
+.o_form_view .o_field_widget select,
+.o_form_view .o_input {
+  border: 1px solid rgba(0,0,0,.25) !important;
+  border-radius: 6px !important;
+  background: #fff !important;
+}
+.o_form_view .o_field_widget input:focus,
+.o_form_view .o_field_widget textarea:focus,
+.o_form_view .o_field_widget select:focus,
+.o_form_view .o_input:focus {
+  border-color: rgba(0,0,0,.55) !important;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.08) !important;
+}
+
+.o_form_view .ix-wide-check{grid-column:1 / -1;}
+
+.modal input[type="checkbox"],.modal input[type="radio"],.modal .o_field_boolean input{accent-color:var(--o-brand-primary);width:18px;height:18px;}
+.o_form_view input[type="checkbox"],
+.o_form_view input[type="radio"]{
+  accent-color: var(--o-brand-primary);
+}
+.o_form_view input[type="checkbox"],
+.o_form_view input[type="radio"]{
+  accent-color: #017e84;
+  width: 18px;
+  height: 18px;
+}
+
+.o_form_view input[type="checkbox"],
+.o_form_view input[type="radio"],
+.o_web_client input[type="checkbox"],
+.o_web_client input[type="radio"]{
+  -webkit-appearance: auto !important;
+  appearance: auto !important;
+  accent-color: #017e84 !important;
+}
+
+.o_form_view input[type="checkbox"]:checked,
+.o_web_client input[type="checkbox"]:checked{
+  background-color: #017e84 !important;
+  border-color: #017e84 !important;
+}
+
+.o_form_view input[type="radio"]:checked,
+.o_web_client input[type="radio"]:checked{
+  background-color: #017e84 !important;
+  border-color: #017e84 !important;
+}
