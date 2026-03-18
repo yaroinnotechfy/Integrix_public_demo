@@ -1,0 +1,54 @@
+<odoo>
+  <record id="view_integrix_config_form" model="ir.ui.view">
+    <field name="name">integrix.config.form</field>
+    <field name="model">integrix.config</field>
+    <field name="arch" type="xml">
+      <form string="Integri-x Settings">
+        <header>
+          <button name="action_test_connection"
+                  type="object"
+                  class="oe_highlight"
+                  string="Test Connection"/>
+        </header>
+        <sheet>
+          <group>
+            <group string="Connection">
+              <field name="base_url" invisible="1"/>
+              <field name="api_email"/>
+              <field name="api_password" password="True"/>
+              <field name="company_id" invisible="1"/>
+              <field name="probe_path" invisible="1"/>
+              <field name="export_path" invisible="1"/>
+            </group>
+            <group string="Probe Result">
+              <field name="last_probe_status" readonly="1"/>
+              <field name="tenant_ip" readonly="1"/>
+              <field name="api_version" readonly="1"/>
+            </group>
+          </group>
+
+          
+
+          <group string="Field Mapping" colspan="2">
+            <field name="mapping_ids" context="{'default_config_id': active_id}">
+              <tree editable="bottom">
+                <field name="active"/>
+                <field name="sequence" widget="handle"/>
+                <field name="ix_field"/>
+                <field name="odoo_field"/>
+              </tree>
+              <form>
+                <group>
+                  <field name="active"/>
+                  <field name="sequence" invisible="1"/>
+                  <field name="ix_field"/>
+                  <field name="odoo_field"/>
+                </group>
+              </form>
+            </field>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>
