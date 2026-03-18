@@ -1,20 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<odoo>
-  <data noupdate="1">
-
-    <!-- Step 1: widen "Test Connection" -->
-    <record id="view_integrix_setup_wizard_step1_wide_btn" model="ir.ui.view">
-      <field name="name">integrix.setup.wizard.step1.buttons.wide</field>
-      <field name="model">integrix.setup.wizard</field>
-      <field name="inherit_id" ref="integrix_connector.view_integrix_setup_wizard_form_step1"/>
-      <field name="priority">200</field>
-      <field name="arch" type="xml">
-        <xpath expr="//button[@name='action_test_connection_wizard']" position="attributes">
-          <attribute name="style">min-width:360px; white-space:nowrap; display:inline-block;</attribute>
-        </xpath>
-      </field>
-    </record>
-
-    <!-- Step 4: -->
-  </data>
-</odoo>
+<odoo/>

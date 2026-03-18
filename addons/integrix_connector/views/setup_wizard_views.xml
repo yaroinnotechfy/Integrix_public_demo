@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-  <!-- STEP 0: вибір сценарію -->
-  <record id="view_integrix_setup_wizard_form_step0" model="ir.ui.view">
+  
+<record id="view_integrix_setup_wizard_form_step0" model="ir.ui.view">
   <field name="name">integrix.setup.wizard.form.step0</field>
   <field name="model">integrix.setup.wizard</field>
   <field name="arch" type="xml">
@@ -27,14 +27,11 @@
       </sheet>
       <footer>
         <!-- спеціально без Next -->
-        <button name="action_back" type="object" string="Back" class="btn-secondary" invisible="1"/>
-      </footer>
+</footer>
     </form>
   </field>
 </record>
-
-  <!-- STEP 0a: форма Sign-up -->
-  <record id="view_integrix_setup_wizard_form_step0a" model="ir.ui.view">
+<record id="view_integrix_setup_wizard_form_step0a" model="ir.ui.view">
   <field name="name">integrix.setup.wizard.form.step0a</field>
   <field name="model">integrix.setup.wizard</field>
   <field name="arch" type="xml">
@@ -44,32 +41,29 @@
 
           <!-- LEFT: USER -->
           <group string="USER" col="2">
-            <field name="signup_first_name"/>
-            <field name="signup_last_name"/>
-            <field name="signup_email" colspan="2"/>
-                        <field name="signup_password" password="True" colspan="2"/>
-<field name="signup_phone" colspan="2"/>
+            <field name="signup_first_name" placeholder="Enter text"/>
+            <field name="signup_last_name" placeholder="Enter text"/>
+            <field name="signup_email" colspan="2" placeholder="Enter text"/>
+                        <field name="signup_password" password="True" colspan="2" placeholder="Enter text"/>
+<field name="signup_phone" colspan="2" placeholder="Enter text"/>
           </group>
 
           <!-- RIGHT: COMPANY -->
           <group string="COMPANY">
-            <field name="signup_company_name"/>
-            <field name="signup_time_zone" string="Time zone"/>
+            <field name="signup_company_name" placeholder="Enter text"/>
+            <field name="signup_time_zone" string="Time zone" placeholder="Select an option"/>
             <field name="signup_company_info" invisible="1"/>
           </group>
 
         </group>
       </sheet>
       <footer>
-        <button name="action_back" type="object" string="Back" class="btn-secondary"/>
-        <button name="action_signup_submit" type="object" string="Sign up now" class="btn-primary oe_highlight"/>
+<button name="action_signup_submit" type="object" string="Sign up now" class="btn-primary oe_highlight"/>
       </footer>
     </form>
   </field>
 </record>
-
-  <!-- STEP 1 -->
-  <record id="view_integrix_setup_wizard_form_step1" model="ir.ui.view">
+<record id="view_integrix_setup_wizard_form_step1" model="ir.ui.view">
     <field name="name">integrix.setup.wizard.form.step1</field>
     <field name="model">integrix.setup.wizard</field>
     <field name="arch" type="xml">
@@ -77,37 +71,25 @@
         <sheet>
           <group>
             <group string="Connection">
-              <field name="base_url" readonly="1" invisible="1"/>
-              <field name="api_email"/>
-              <field name="api_password" password="True"/>
-              <field name="company_id"/>
-              <field name="probe_path" invisible="1"/>
-              <field name="export_path" invisible="1"/>
-              <div class="ix-test-conn">
-                <button name="action_test_connection_wizard"
-                        style="min-width: 360px; white-space: nowrap; display:inline-block;"
-                        context="{'integrix_show_loader': True}"
-                        type="object" string="Test Connection" class="oe_highlight ix-test-conn-btn"/>
+              <field name="base_url" invisible="1" force_save="1"/>
+<label for="api_email" string="Integrix Email*"/><field name="api_email" nolabel="1"/>
+              <label for="api_password" string="Integrix Password*"/><field name="api_password" nolabel="1" password="True"/>
+
+              <field name="probe_path" invisible="1" force_save="1"/>
+<field name="export_path" invisible="1" force_save="1"/>
+<div class="ix-test-conn">
                 <span class="fa fa-spinner fa-spin ix-inline-loader" style="display:none;" title="Connecting..."/>
               </div>
             </group>
-            <group string="Probe Result">
-              <field name="ping_status" readonly="1"/>
-              <field name="ping_tenant" readonly="1"/>
-              <field name="ping_api_version" readonly="1"/>
             </group>
-          </group>
         </sheet>
         <footer>
-          <button name="action_back" type="object" string="Back" class="btn-secondary" invisible="1"/>
-          <button name="action_next" type="object" string="Next" class="btn-primary oe_highlight"/>
+<button name="action_next" type="object" string="Next" class="btn-primary oe_highlight"/>
         </footer>
       </form>
     </field>
   </record>
-
-  <!-- STEP 2 -->
-  <record id="view_integrix_setup_wizard_form_step2" model="ir.ui.view">
+<record id="view_integrix_setup_wizard_form_step2" model="ir.ui.view">
     <field name="name">integrix.setup.wizard.form.step2</field>
     <field name="model">integrix.setup.wizard</field>
     <field name="arch" type="xml">
@@ -119,15 +101,12 @@
           </group>
         </sheet>
         <footer>
-          <button name="action_back" type="object" string="Back" class="btn-secondary" invisible="1"/>
-          <button name="action_next" type="object" string="Next" class="btn-primary oe_highlight"/>
+<button name="action_next" type="object" string="Next" class="btn-primary oe_highlight"/>
         </footer>
       </form>
     </field>
   </record>
-
-  <!-- STEP 3 -->
-  <record id="view_integrix_setup_wizard_form_step3" model="ir.ui.view">
+<record id="view_integrix_setup_wizard_form_step3" model="ir.ui.view">
     <field name="name">integrix.setup.wizard.form.step3</field>
     <field name="model">integrix.setup.wizard</field>
     <field name="arch" type="xml">
@@ -153,15 +132,12 @@
           </group>
         </sheet>
         <footer>
-          <button name="action_back" type="object" string="Back" class="btn-secondary" invisible="1"/>
-          <button name="action_next" type="object" string="Next" class="btn-primary oe_highlight"/>
+<button name="action_next" type="object" string="Next" class="btn-primary oe_highlight"/>
         </footer>
       </form>
     </field>
   </record>
-
-  <!-- STEP 4 -->
-  <record id="view_integrix_setup_wizard_form_step4" model="ir.ui.view">
+<record id="view_integrix_setup_wizard_form_step4" model="ir.ui.view">
     <field name="name">integrix.setup.wizard.form.step4</field>
     <field name="model">integrix.setup.wizard</field>
     <field name="arch" type="xml">
@@ -169,19 +145,16 @@
         <sheet>
           <group>
             <separator string="Initial Sync"/>
-            <field name="do_initial_sync" string="Import all equipment from Odoo to IntegriX"/>
+            <field name="do_initial_sync" string="Import all equipment from Odoo to IntegriX" colspan="2"/>
           </group>
         </sheet>
         <footer>
-          <button name="action_back" type="object" string="Back" class="btn-secondary" invisible="1"/>
-          <button name="action_finish" type="object" string="Finish" class="btn-primary oe_highlight"/>
+<button name="action_finish" type="object" string="Finish" class="btn-primary oe_highlight"/>
         </footer>
       </form>
     </field>
   </record>
-
-  <!-- ACTION  -->
-  <record id="action_integrix_setup_wizard" model="ir.actions.act_window">
+<record id="action_integrix_setup_wizard" model="ir.actions.act_window">
     <field name="name">Integri-x Setup Wizard</field>
     <field name="res_model">integrix.setup.wizard</field>
     <field name="view_mode">form</field>

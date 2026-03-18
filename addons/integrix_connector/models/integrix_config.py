@@ -4,6 +4,11 @@ import requests
 import base64, json
 
 class IntegrixConfig(models.Model):
+    def _base_root(self, base):
+        base = (base or '').strip()
+        base = re.sub(r'/api/auth/sign-in/?$', '', base, flags=re.I)
+        return base.rstrip('/')
+
     _name = 'integrix.config'
     _description = 'Integri-x Settings'
 
@@ -30,16 +35,16 @@ class IntegrixConfig(models.Model):
     api_version = fields.Char(string='API Version', readonly=True)
 
     def _fmt_url(self, base, path):
-        base = (base or '').rstrip('/')
+        base = self._base_root(base)
         path = (path or '').lstrip('/')
         return f"{base}/{path}" if base or path else ''
 
     def action_test_connection(self):
         self.ensure_one()
         if not (self.base_url and self.api_email and self.api_password):
-            raise UserError(_("Please fill Base URL, API Email and API Password."))
+            raise UserError(_("Please fill Integri-x Email and Integri-x Password."))
 
-        signin_url = self._fmt_url(self.base_url, "api/Auth/sign-in")
+        signin_url = self._fmt_url(self.base_url, "api/auth/sign-in")
         try:
             r = requests.post(signin_url, json={"email": self.api_email, "password": self.api_password}, timeout=60)
             if r.status_code >= 400:

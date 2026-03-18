@@ -3,6 +3,11 @@ from odoo.exceptions import UserError
 import requests
 
 class IntegrixSync(models.AbstractModel):
+    def _base_root(self, base):
+        base = (base or '').strip()
+        base = re.sub(r'/api/auth/sign-in/?$', '', base, flags=re.I)
+        return base.rstrip('/')
+
     _name = "integrix.sync"
     _description = "Integri-x Sync (IX → Odoo)"
 
@@ -14,7 +19,8 @@ class IntegrixSync(models.AbstractModel):
         return cfg
 
     def _login(self, base_url, email, password, timeout=30):
-        url = f"{base_url.rstrip('/')}/api/Auth/sign-in"
+        base = self._base_root(base_url)
+        url = f"{base}/api/auth/sign-in"
         r = requests.post(url, json={"email": email, "password": password}, timeout=timeout)
         r.raise_for_status()
         token = None
