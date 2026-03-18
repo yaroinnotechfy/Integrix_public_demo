@@ -72,8 +72,8 @@
           <group>
             <group string="Connection">
               <field name="base_url" invisible="1" force_save="1"/>
-<label for="api_email" string="Integrix Email*"/><field name="api_email" nolabel="1"/>
-              <label for="api_password" string="Integrix Password*"/><field name="api_password" nolabel="1" password="True"/>
+<field name="api_email" string="Integrix Email*" placeholder="Enter text"/>
+              <field name="api_password" string="Integrix Password*" password="True" placeholder="Enter text"/>
 
               <field name="probe_path" invisible="1" force_save="1"/>
 <field name="export_path" invisible="1" force_save="1"/>
