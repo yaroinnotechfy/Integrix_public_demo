@@ -2,11 +2,12 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 import requests
 import base64, json
+import re
 
 class IntegrixConfig(models.Model):
     def _base_root(self, base):
         base = (base or '').strip()
-        base = re.sub(r'/api/auth/sign-in/?$', '', base, flags=re.I)
+        base = re.sub(r'/api/Auth/sign-in/?$', '', base, flags=re.I)
         return base.rstrip('/')
 
     _name = 'integrix.config'
@@ -44,9 +45,9 @@ class IntegrixConfig(models.Model):
         if not (self.base_url and self.api_email and self.api_password):
             raise UserError(_("Please fill Integri-x Email and Integri-x Password."))
 
-        signin_url = self._fmt_url(self.base_url, "api/auth/sign-in")
+        signin_url = self._fmt_url(self.base_url, "api/Auth/sign-in")
         try:
-            r = requests.post(signin_url, json={"email": self.api_email, "password": self.api_password}, timeout=60)
+            r = requests.post(signin_url, json={"email": self.api_email, "password": self.api_password, "timeZoneId": (self.env.user.tz or "UTC")}, timeout=60)
             if r.status_code >= 400:
                 self.last_probe_status = "AUTH FAIL %s" % r.status_code
                 raise UserError(_("Auth failed: %s") % (r.text or r.status_code))
@@ -104,7 +105,7 @@ class IntegrixConfig(models.Model):
                 except Exception:
                     pass
 
-        probe_path = (self.probe_path or "").strip() or "api/companies/{companyId}/CompanyAssets"
+        probe_path = (self.probe_path or "").strip() or "api/Companies/user"
         if "{companyId}" in probe_path:
             if not self.company_id:
                 probe_path = "api/Auth/Ip"

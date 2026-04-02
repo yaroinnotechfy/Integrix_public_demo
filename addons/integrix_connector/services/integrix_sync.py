@@ -21,7 +21,7 @@ class IntegrixSync(models.AbstractModel):
     def _login(self, base_url, email, password, timeout=30):
         base = self._base_root(base_url)
         url = f"{base}/api/auth/sign-in"
-        r = requests.post(url, json={"email": email, "password": password}, timeout=timeout)
+        r = requests.post(url, json={"email": email, "password": password, "timeZoneId": (self.env.user.tz or "UTC")}, timeout=timeout)
         r.raise_for_status()
         token = None
         try:

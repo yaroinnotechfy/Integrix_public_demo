@@ -12,7 +12,7 @@ class IntegrixClient(models.AbstractModel):
 
     def _base_root(self, base_url):
         base = (base_url or "").strip()
-        base = re.sub(r'/api/auth/sign-in/?$', '', base, flags=re.I)
+        base = re.sub(r'/api/Auth/sign-in/?$', '', base, flags=re.I)
         base = re.sub(r'/api/Auth/sign-in/?$', '', base)
         return base.rstrip("/")
 
@@ -39,7 +39,7 @@ class IntegrixClient(models.AbstractModel):
     def _login(self, base_url, email, password):
         base = self._base_root(base_url)
         url = f"{base}/api/Auth/sign-in"
-        ok, info = self._post(url, json={"email": email, "password": password}, timeout=20)
+        ok, info = self._post(url, json={"email": email, "password": password, "timeZoneId": (self.env.user.tz or "UTC")}, timeout=20)
         if not ok:
             return False, f"Auth error: {info.get('error')}"
         if int(info.get("status", 0)) >= 400:

@@ -20,7 +20,7 @@ class IntegrixSetupWizardLine(models.TransientModel):
 class IntegrixSetupWizard(models.TransientModel):
     def _base_root(self, base):
         base = (base or '').strip()
-        base = re.sub(r'/api/auth/sign-in/?$', '', base, flags=re.I)
+        base = re.sub(r'/api/Auth/sign-in/?$', '', base, flags=re.I)
         return base.rstrip('/')
 
     def _tz_get(self):
@@ -54,7 +54,7 @@ class IntegrixSetupWizard(models.TransientModel):
     api_email = fields.Char(string="Integrix Email")
     api_password = fields.Char(string="Integrix Password")
     company_id = fields.Char()
-    probe_path = fields.Char()
+    probe_path   = fields.Char(default="api/Auth/Ip")
     export_path = fields.Char()
 
     ssot = fields.Selection([("ix", "Integri-x is source of truth"), ("odoo", "Odoo is source of truth")], default="odoo")
@@ -205,9 +205,9 @@ class IntegrixSetupWizard(models.TransientModel):
             raise UserError(_("Please fill Integrix Email and Integrix Password."))
 
         base = (self.base_url or "https://api.integri-x.com").rstrip("/")
-        signin_url = self._fmt_url(base, "api/auth/sign-in")
+        signin_url = self._fmt_url(base, "api/Auth/sign-in")
 
-        r = requests.post(signin_url, json={"email": self.api_email, "password": self.api_password}, timeout=60)
+        r = requests.post(signin_url, json={"email": self.api_email, "password": self.api_password, "timeZoneId": (self.env.user.tz or "UTC")}, timeout=60)
         if r.status_code >= 400:
             self.ping_status = f"AUTH FAIL {r.status_code}"
             raise UserError(_("Authentication failed: %s") % (r.text or r.status_code))
@@ -235,6 +235,19 @@ class IntegrixSetupWizard(models.TransientModel):
             meta = meta[0] if meta and isinstance(meta[0], dict) else {}
         if not isinstance(meta, dict):
             meta = {}
+        cid = None
+        if isinstance(meta, dict):
+            cid = meta.get("companyId") or meta.get("company_id") or meta.get("id") or meta.get("companyGuid")
+            if not cid and isinstance(meta.get("company"), dict):
+                cid = meta["company"].get("id") or meta["company"].get("companyId")
+        elif isinstance(meta, list) and meta and isinstance(meta[0], dict):
+            first = meta[0]
+            cid = first.get("companyId") or first.get("company_id") or first.get("id") or first.get("companyGuid")
+            if not cid and isinstance(first.get("company"), dict):
+                cid = first["company"].get("id") or first["company"].get("companyId")
+        if cid and not (self.company_id or "").strip():
+            self.company_id = str(cid)
+
         self.ping_tenant = meta.get("ip") or meta.get("tenant") or meta.get("companyName") or meta.get("tenantName") or self.ping_tenant
 
         try:
