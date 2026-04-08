@@ -7,6 +7,26 @@ import re
 TIMEOUT = 25
 
 class IntegrixClient(models.AbstractModel):
+
+    def _company_id_from_api(self, base_url, bearer):
+        base = self._base_root(base_url)
+        url = f"{base.rstrip('/')}/api/Companies/user"
+        ok, info = self._get(url, bearer=bearer, timeout=15)
+        if not ok or int(info.get("status", 0)) >= 400:
+            return None
+        body = info.get("body")
+        if isinstance(body, dict):
+            for k in ("companyId","company_id","companyGuid","companyGuidId","id","guid"):
+                v = body.get(k)
+                if isinstance(v, (str,int)) and str(v).strip():
+                    return str(v).strip()
+            c = body.get("company") or {}
+            if isinstance(c, dict):
+                for k in ("id","companyId","guid"):
+                    v = c.get(k)
+                    if isinstance(v, (str,int)) and str(v).strip():
+                        return str(v).strip()
+        return None
     _name = "integrix.client"
     _description = "Integri-x HTTP client"
 
@@ -77,6 +97,10 @@ class IntegrixClient(models.AbstractModel):
         ok, token = self._login(base_url, email, password)
         if not ok:
             return False, token
+        if not (company_id or "").strip():
+            cid = self._company_id_from_api(base_url, token)
+            if cid:
+                company_id = cid
 
         cid = (company_id or "").strip()
         if not cid:
@@ -104,6 +128,10 @@ class IntegrixClient(models.AbstractModel):
         ok, token = self._login(base_url, email, password)
         if not ok:
             return False, token
+        if not (company_id or "").strip():
+            cid = self._company_id_from_api(base_url, token)
+            if cid:
+                company_id = cid
 
         cid = (company_id or "").strip()
         if not cid:
@@ -139,17 +167,24 @@ class IntegrixClient(models.AbstractModel):
         if not ok:
             return False, token
 
-        cid = (company_id or "").strip()
-        if not cid:
-            okc, cid_or_err = self._company_id_for_token(base_url, token)
-            if not okc:
-                return False, cid_or_err
-            cid = cid_or_err
+        base = (base_url or "").rstrip("/")
 
-        base = self._base_root(base_url)
-        path = (export_path or "api/AssetsImport/{companyId}/import-asset").lstrip("/")
-        path = path.replace("{companyId}", cid)
-        url = f"{base}/{path}"
+        path = (export_path or "").strip().lstrip("/")
+        if not path:
+            path = "api/AssetsImport/import-asset"
+
+        if "{companyId}" in path:
+            if company_id:
+                path = path.replace("{companyId}", (company_id or "").strip())
+            else:
+                path = path.replace("/{companyId}", "")
+                path = path.replace("{companyId}/", "")
+                path = path.replace("{companyId}", "")
+
+        while "//" in path:
+            path = path.replace("//", "/")
+        url = f"{base}/{path.lstrip('/')}"
+
         payload = {"assets": list(assets or [])}
         ok2, info = self._post(url, json=payload, bearer=token, timeout=timeout)
         if not ok2:
